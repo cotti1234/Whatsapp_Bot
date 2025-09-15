@@ -84,7 +84,7 @@ CottiWhatsAppApp/
 
 1.  **Start the bot:**
     ```bash
-    npm run dev
+    npm start
     ```
 
 2.  On the first run, a QR code will appear in the terminal. Scan it with your phone using the WhatsApp "Linked Devices" feature.
@@ -100,6 +100,141 @@ CottiWhatsAppApp/
 This mode allows you to test commands without connecting to WhatsApp.
 
 1.  **Enable Test Mode:**
+    -   Set `TEST_MODE=true` in your `.env` file, OR
+    -   Start the bot with the `--test` flag:
+        ```bash
+        npm start -- --test
+        ```
+
+2.  Enter commands in the console, e.g., `!ping`.
+
+## Available Commands
+
+-   `!help`: Lists all available commands.
+-   `!ping`: Checks the bot's response time.
+-   `!status`: Shows system and bot information.
+-   `!config`: Displays the current configuration.
+-   `!yt <URL or Search Term>`: Downloads the audio from a YouTube video as an MP3 file.
+
+## Docker Deployment
+
+1.  **Build the Docker image:**
+    ```bash
+    docker-compose build
+    ```
+
+2.  **Run the container:**
+    ```bash
+    docker-compose up -d
+    ```
+
+3.  To see the QR code and logs, view the container's logs:
+    ```bash
+    docker-compose logs -f
+    ```
+
+Deutsch:
+
+Die Cotti WhatsApp App ist ein modularer, testbarer und erweiterbarer WhatsApp-Bot, der mit TypeScript erstellt wurde. Es verfügt über ein Befehlssystem, das sowohl TypeScript- als auch JavaScript-Befehle unterstützt, einen zentralen Downloader-Dienst für Medien und einen konsolenbasierten Testmodus für die Entwicklung ohne Verbindung zu WhatsApp.
+
+## Funktionen
+
+- **Modulares Befehlssystem**: Fügen Sie ganz einfach neue Befehle in „.ts“ oder „.js“ hinzu.
+- **Downloader-Service**: Ruft Medien ab und verarbeitet sie. Unterstützt zunächst YouTube MP3-Downloads.
+- **Konsolentestmodus**: Testen Sie die Bot-Funktionalität direkt in Ihrem Terminal.
+- **Konfigurationsverwaltung**: Verwendet „.env“-Dateien für eine einfache Konfiguration, validiert mit Zod.
+- **Robuste Protokollierung**: Unterstützt von Pino für strukturierte und leistungsstarke Protokollierung.
+- **Codequalität**: Vorkonfiguriert mit ESLint, Prettier und Husky.
+- **Dockerisiert**: Bereit für die Bereitstellung mit „Dockerfile“ und „docker-compose.yml“.
+
+## Projekt Aufbau
+
+```
+CottiWhatsAppApp/
+├─ src/
+│  ├─ index.ts           # Haupteingangspunkt
+│  ├─ whatsapp.ts        # Kernbotklasse und Befehlslader
+│  ├─ config.ts          # Konfigurationslader und Validator
+│  ├─ logger.ts          # Pino logger setup
+│  ├─ commands/          # Bot Befehle (TypeScript)
+│  │  └─ legacy/          # Legacy bot Befehle (JavaScript)
+│  ├─ services/          # Dienste wie der Downloader
+│  └─ utils/             # Utility funktionen
+├─ tests/                 # Jest tests
+├─ package.json
+├─ tsconfig.json
+├─ .env.example           # Vorlage für Umgebungsvariablen
+├─ README.md
+├─ Dockerfile
+└─ docker-compose.yml
+```
+
+## Installation
+
+1.  **Klonen Sie das Repository:**
+    ```bash
+    git clone <repository-url>
+    cd CottiWhatsAppApp
+    ```
+
+2.  **Abhängigkeiten installieren:**
+    ```bash
+    npm install
+    ```
+
+3.  **Insterliere FFmpeg:**
+    Der Downloader-Dienst benötigt FFmpeg für die Audiokonvertierung. Bitte installieren Sie es auf Ihrem System.
+    - **Ubuntu/Debian**: `sudo apt update && sudo apt install ffmpeg`
+    - **macOS (mit Homebrew)**: `brew install ffmpeg`
+    - **Windows (mit Chocolatey)**: `choco install ffmpeg`
+
+## Configuration
+
+1.  Erstell ein `.env` Datei durch Kopieren der Beispieldatei:
+    ```bash
+    cp .env.example .env
+    ```
+
+2.  Bearbeiten Sie die `.env` Datei mit Ihren gewünschten Einstellungen:
+    ```env
+    # Bot Configuration
+    BOT_NAME=Cotti WhatsApp App
+    PREFIX=!
+
+    # Downloader Configuration
+    MAX_FILE_SIZE_MB=100
+    TEMP_DIR=./temp
+
+    # Application Environment
+    NODE_ENV=development
+    LOG_LEVEL=info
+
+    # Console Test Mode
+    TEST_MODE=false
+    ```
+
+## Usage
+
+### Normal Modus (Verbindet sich mit WhatsApp)
+
+1.  **Starte denn Bot:**
+    ```bash
+    npm start
+    ```
+
+2.  Beim ersten Durchlauf erscheint ein QR-Code im Terminal. Scannen Sie es mit Ihrem Telefon über die WhatsApp-Funktion „Verknüpfte Geräte“.
+
+3.  Erstellen Sie für die Produktion zuerst das Projekt:
+    ```bash
+    npm run build
+    npm start
+    ```
+
+### Konsolentestmodus
+
+In diesem Modus können Sie Befehle testen, ohne eine Verbindung zu WhatsApp herzustellen.
+
+1.  **Testmodus aktivieren:**
     -   Set `TEST_MODE=true` in your `.env` file, OR
     -   Start the bot with the `--test` flag:
         ```bash
